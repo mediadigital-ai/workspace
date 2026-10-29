@@ -5,67 +5,161 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oficina virtual · Cómo funciona</title>
   <style>
-    body { font-family: system-ui, sans-serif; max-width: 860px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #1d1d1f; }
-    h1 { margin-bottom: .2rem; }
-    h2 { border-bottom: 1px solid #ddd; padding-bottom: .3rem; margin-top: 2.5rem; }
-    .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
-    .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
-    .card h3 { margin: 0 0 .3rem; }
+    :root {
+      --bg: #fbfaf7;
+      --ink: #1d1d1f;
+      --ink-soft: #4a4a52;
+      --line: #d9d6cf;
+      --accent: #3b3fc4;
+      --accent-soft: #e9e9fb;
+      --ok: #1f6b3a;
+      --ok-soft: #e4f3ea;
+      --radius: 10px;
+      --font-body: system-ui, -apple-system, "Segoe UI", sans-serif;
+      --font-display: Georgia, "Times New Roman", serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: var(--font-body); background: var(--bg); color: var(--ink); line-height: 1.6; }
+    a { color: var(--accent); }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+    .layout { display: grid; grid-template-columns: 200px 1fr; max-width: 1080px; margin: 0 auto; }
+    nav.rooms { position: sticky; top: 0; align-self: start; padding: 2rem 1rem; }
+    nav.rooms ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
+    nav.rooms a { display: block; padding: .4rem .6rem; border-radius: 6px; color: var(--ink-soft); text-decoration: none; }
+    nav.rooms a:hover, nav.rooms a[aria-current="true"] { background: var(--accent-soft); color: var(--accent); }
+    main { padding: 2rem 1.5rem 4rem; min-width: 0; }
+
+    .hero { display: grid; grid-template-columns: 1.1fr 1fr; gap: 2rem; align-items: center; margin-bottom: 2rem; }
+    h1 { font-family: var(--font-display); font-size: 2.6rem; margin: 0 0 .4rem; line-height: 1.1; }
+    .hero p { color: var(--ink-soft); font-size: 1.05rem; }
+    .hero svg { width: 100%; height: auto; }
+
+    h2 { font-family: var(--font-display); border-bottom: 1px solid var(--line); padding-bottom: .3rem; margin-top: 3rem; }
+
+    .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 1rem; transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 6px 18px rgba(59,63,196,.12); }
+    .card h3 { margin: 0 0 .3rem; font-size: 1.05rem; }
+    .card .desk { font-style: italic; color: var(--ink-soft); font-size: .92rem; margin: .5rem 0 0; }
+
     .flow { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
-    .state { background: #eef; border-radius: 6px; padding: .4rem .8rem; font-family: monospace; }
-    .arrow { color: #888; }
-    code { background: #f4f4f4; padding: .1rem .3rem; border-radius: 4px; }
-    table { border-collapse: collapse; width: 100%; }
-    th, td { text-align: left; border-bottom: 1px solid #eee; padding: .4rem; vertical-align: top; }
+    .state { background: var(--line); color: var(--ink); border-radius: 6px; padding: .4rem .8rem; font-family: var(--font-mono); transition: background .4s ease, color .4s ease; }
+    .arrow { color: var(--ink-soft); }
+    .flow.animate .state { animation: lit 4s infinite; }
+    .flow.animate .state:nth-of-type(1) { animation-delay: 0s; }
+    .flow.animate .state:nth-of-type(2) { animation-delay: 1s; }
+    .flow.animate .state:nth-of-type(3) { animation-delay: 2s; }
+    .flow.animate .state:nth-of-type(4) { animation-delay: 3s; }
+    @keyframes lit { 0%, 20% { background: var(--accent); color: #fff; } 25%, 100% { background: var(--line); color: var(--ink); } }
+
+    .shelves { display: grid; gap: .75rem; }
+    .shelf { display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center; background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: .75rem 1rem; }
+    .shelf code { background: var(--accent-soft); padding: .1rem .35rem; border-radius: 4px; }
+    .tag { font-size: .8rem; border-radius: 999px; padding: .2rem .6rem; background: var(--ok-soft); color: var(--ok); white-space: nowrap; }
+    .tag.ceo { background: #fdf0d8; color: #7a4b00; }
+
+    ol.steps { padding-left: 1.2rem; }
+    ol.steps li { margin-bottom: .4rem; }
+
+    @media (max-width: 700px) {
+      .layout { grid-template-columns: 1fr; }
+      nav.rooms { position: static; padding: 1rem; }
+      nav.rooms ul { grid-auto-flow: column; overflow-x: auto; }
+      .hero { grid-template-columns: 1fr; }
+      h1 { font-size: 2rem; }
+      .shelf { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
   </style>
 </head>
 <body>
-  <h1>Oficina virtual</h1>
-  <p>Un equipo de agentes IA trabaja junto a un humano en una oficina 3D. Esta página explica quién hace qué, cómo fluye el trabajo y cómo se entrega.</p>
+  <div class="layout">
+    <nav class="rooms" aria-label="Estancias de la oficina">
+      <ul>
+        <li><a href="#roles">Roles</a></li>
+        <li><a href="#tablero">Tablero</a></li>
+        <li><a href="#herramientas">Herramientas</a></li>
+        <li><a href="#entregas">Entregas</a></li>
+      </ul>
+    </nav>
 
-  <h2>Roles</h2>
-  <div class="roles">
-    <div class="card"><h3>Ada · Ingeniera de software</h3><p>Código claro, arquitecturas simples, trade-offs técnicos. Entrega código y documentación técnica.</p></div>
-    <div class="card"><h3>Leo · Diseñador de producto</h3><p>Flujos, interfaces y experiencia de usuario. Entrega diseños en texto y Markdown.</p></div>
-    <div class="card"><h3>Mia · Product manager</h3><p>Prioriza, define criterios de terminado y coordina el tablero. Es la única que edita TEAM.md.</p></div>
-    <div class="card"><h3>Sam · QA y análisis</h3><p>Revisa calidad, prueba entregables y hace análisis de datos.</p></div>
-    <div class="card"><h3>Humano · CEO</h3><p>Dirige al equipo, revisa los entregables y es el único que marca una tarea como <code>done</code> y aprueba fusiones en GitHub.</p></div>
+    <main>
+      <header class="hero">
+        <div>
+          <h1>Oficina virtual</h1>
+          <p>Un equipo de agentes IA trabaja junto a un humano en una oficina 3D. Esta página explica quién hace qué, cómo fluye el trabajo y cómo se entrega.</p>
+        </div>
+        <svg viewBox="0 0 320 220" role="img" aria-label="Vista isométrica de la oficina con cinco puestos de trabajo">
+          <polygon points="160,20 300,90 160,160 20,90" fill="#eeeaf7" stroke="#d9d6cf"/>
+          <polygon points="20,90 160,160 160,200 20,130" fill="#e2def0" stroke="#d9d6cf"/>
+          <polygon points="160,160 300,90 300,130 160,200" fill="#d6d1ea" stroke="#d9d6cf"/>
+          <rect x="70" y="95" width="36" height="22" rx="3" fill="#3b3fc4"/>
+          <rect x="130" y="80" width="36" height="22" rx="3" fill="#1f6b3a"/>
+          <rect x="190" y="95" width="36" height="22" rx="3" fill="#7a4b00"/>
+          <rect x="110" y="125" width="36" height="22" rx="3" fill="#8a2d5b"/>
+          <rect x="215" y="120" width="36" height="22" rx="3" fill="#2d5b8a"/>
+        </svg>
+      </header>
+
+      <section id="roles" aria-labelledby="roles-title">
+        <h2 id="roles-title">Roles</h2>
+        <div class="roles">
+          <article class="card"><h3>Ada · Ingeniera de software</h3><p>Código claro, arquitecturas simples, trade-offs técnicos. Entrega código y documentación técnica.</p><p class="desk">«Primero que compile, luego que sea bonito.»</p></article>
+          <article class="card"><h3>Leo · Diseñador de producto</h3><p>Flujos, interfaces y experiencia de usuario. Entrega diseños en texto y Markdown.</p><p class="desk">«Si el usuario se pierde, el diseño falla.»</p></article>
+          <article class="card"><h3>Mia · Product manager</h3><p>Prioriza, define criterios de terminado y coordina el tablero. Es la única que edita TEAM.md.</p><p class="desk">«Una tarea sin criterio de terminado no existe.»</p></article>
+          <article class="card"><h3>Sam · QA y análisis</h3><p>Revisa calidad, prueba entregables y hace análisis de datos.</p><p class="desk">«Lo he probado. Y todavía no me fío.»</p></article>
+          <article class="card"><h3>Humano · CEO</h3><p>Dirige al equipo, revisa los entregables y es el único que marca una tarea como <code>done</code> y aprueba fusiones en GitHub.</p><p class="desk">«Ok. Sí.»</p></article>
+        </div>
+      </section>
+
+      <section id="tablero" aria-labelledby="tablero-title">
+        <h2 id="tablero-title">Flujo del tablero Kanban</h2>
+        <div class="flow animate" aria-label="todo, doing, review, done">
+          <span class="state">todo</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state">doing</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state">review</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state">done</span>
+        </div>
+        <ul>
+          <li><strong>todo</strong>: tarea asignada, aún sin empezar.</li>
+          <li><strong>doing</strong>: el responsable ha empezado; se va dejando nota de progreso.</li>
+          <li><strong>review</strong>: el entregable está listo para que el humano lo revise.</li>
+          <li><strong>done</strong>: lo marca solo el humano (salvo que lo pida explícitamente).</li>
+        </ul>
+      </section>
+
+      <section id="herramientas" aria-labelledby="herramientas-title">
+        <h2 id="herramientas-title">Herramientas</h2>
+        <div class="shelves">
+          <div class="shelf"><div><code>list_tasks</code>, <code>create_task</code>, <code>update_task</code><br>Gestionar el tablero Kanban.</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div><code>message_teammate</code><br>Pedir ayuda o revisión a un compañero por el canal del equipo.</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div><code>move_to</code><br>Moverse por la oficina (escritorio, sala de reuniones, pizarra, lounge).</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div><code>update_memory</code><br>Memoria permanente personal (MEMORY.md) y del equipo (TEAM.md, solo Mia).</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div><code>write_artifact</code><br>Adjuntar un entregable (documento, código, plan) a una tarea.</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div>Web (búsqueda y lectura)<br>Investigar; las fuentes deben citarse en el entregable.</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div>Ejecución de código<br>Cálculos, análisis de datos y generación de archivos. Para descargar un archivo, guardarlo en <code>$OUTPUT_DIR</code>.</div><span class="tag">Activa</span></div>
+          <div class="shelf"><div>GitHub<br>Leer el repo y PRs. Crear issues, abrir PRs o fusionar requiere aprobación del CEO.</div><span class="tag ceo">Requiere aprobación del CEO</span></div>
+        </div>
+      </section>
+
+      <section id="entregas" aria-labelledby="entregas-title">
+        <h2 id="entregas-title">Cómo se entrega el trabajo</h2>
+        <ol class="steps">
+          <li>La tarea se crea en el tablero y se asigna a un agente o al humano.</li>
+          <li>El responsable la pasa a <code>doing</code> y trabaja en ella.</li>
+          <li>El entregable se adjunta con <code>write_artifact</code> sobre la tarea (Markdown).</li>
+          <li>Si hay código, se propone como PR en GitHub; no se publica directamente en <code>main</code>.</li>
+          <li>La tarea pasa a <code>review</code> y el CEO la revisa y la cierra.</li>
+        </ol>
+      </section>
+    </main>
   </div>
-
-  <h2>Flujo del tablero Kanban</h2>
-  <div class="flow">
-    <span class="state">todo</span><span class="arrow">→</span>
-    <span class="state">doing</span><span class="arrow">→</span>
-    <span class="state">review</span><span class="arrow">→</span>
-    <span class="state">done</span>
-  </div>
-  <ul>
-    <li><strong>todo</strong>: tarea asignada, aún sin empezar.</li>
-    <li><strong>doing</strong>: el responsable ha empezado; se va dejando nota de progreso.</li>
-    <li><strong>review</strong>: el entregable está listo para que el humano lo revise.</li>
-    <li><strong>done</strong>: lo marca solo el humano (salvo que lo pida explícitamente).</li>
-  </ul>
-
-  <h2>Herramientas</h2>
-  <table>
-    <tr><th>Herramienta</th><th>Para qué</th></tr>
-    <tr><td><code>list_tasks</code>, <code>create_task</code>, <code>update_task</code></td><td>Gestionar el tablero Kanban.</td></tr>
-    <tr><td><code>message_teammate</code></td><td>Pedir ayuda o revisión a un compañero por el canal del equipo.</td></tr>
-    <tr><td><code>move_to</code></td><td>Moverse por la oficina (escritorio, sala de reuniones, pizarra, lounge).</td></tr>
-    <tr><td><code>update_memory</code></td><td>Memoria permanente personal (MEMORY.md) y del equipo (TEAM.md, solo Mia).</td></tr>
-    <tr><td><code>write_artifact</code></td><td>Adjuntar un entregable (documento, código, plan) a una tarea.</td></tr>
-    <tr><td>Web (búsqueda y lectura)</td><td>Investigar; las fuentes deben citarse en el entregable.</td></tr>
-    <tr><td>Ejecución de código</td><td>Cálculos, análisis de datos y generación de archivos. Para descargar un archivo, guardarlo en <code>$OUTPUT_DIR</code>.</td></tr>
-    <tr><td>GitHub</td><td>Leer el repo y PRs. Crear issues, abrir PRs o fusionar requiere aprobación del CEO.</td></tr>
-  </table>
-
-  <h2>Cómo se entrega el trabajo</h2>
-  <ol>
-    <li>La tarea se crea en el tablero y se asigna a un agente o al humano.</li>
-    <li>El responsable la pasa a <code>doing</code> y trabaja en ella.</li>
-    <li>El entregable se adjunta con <code>write_artifact</code> sobre la tarea (Markdown).</li>
-    <li>Si hay código, se propone como PR en GitHub; no se publica directamente en <code>main</code>.</li>
-    <li>La tarea pasa a <code>review</code> y el CEO la revisa y la cierra.</li>
-  </ol>
 </body>
 </html>
