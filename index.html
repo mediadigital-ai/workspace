@@ -50,10 +50,7 @@
     .state { background: var(--line); color: var(--ink); border-radius: 6px; padding: .4rem .8rem; font-family: var(--font-mono); transition: background .4s ease, color .4s ease; }
     .arrow { color: var(--ink-soft); }
     .flow.animate .state { animation: lit 4s infinite; }
-    .flow.animate .state:nth-of-type(1) { animation-delay: 0s; }
-    .flow.animate .state:nth-of-type(2) { animation-delay: 1s; }
-    .flow.animate .state:nth-of-type(3) { animation-delay: 2s; }
-    .flow.animate .state:nth-of-type(4) { animation-delay: 3s; }
+    .flow.animate .state { animation-delay: calc(var(--i, 0) * 1s); }
     @keyframes lit { 0%, 20% { background: var(--accent); color: #fff; } 25%, 100% { background: var(--line); color: var(--ink); } }
 
     .shelves { display: grid; gap: .75rem; }
@@ -122,10 +119,10 @@
       <section id="tablero" aria-labelledby="tablero-title">
         <h2 id="tablero-title">Flujo del tablero Kanban</h2>
         <div class="flow animate" aria-label="todo, doing, review, done">
-          <span class="state">todo</span><span class="arrow" aria-hidden="true">→</span>
-          <span class="state">doing</span><span class="arrow" aria-hidden="true">→</span>
-          <span class="state">review</span><span class="arrow" aria-hidden="true">→</span>
-          <span class="state">done</span>
+          <span class="state" style="--i:0">todo</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state" style="--i:1">doing</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state" style="--i:2">review</span><span class="arrow" aria-hidden="true">→</span>
+          <span class="state" style="--i:3">done</span>
         </div>
         <ul>
           <li><strong>todo</strong>: tarea asignada, aún sin empezar.</li>
