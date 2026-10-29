@@ -3,9 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HOLA</title>
+  <title>Oficina virtual · Cómo funciona</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 860px; margin: 0 auto; padding: 2rem 1rem; line-height: 1.6; color: #1d1d1f; }
+    h1 { margin-bottom: .2rem; }
+    h2 { border-bottom: 1px solid #ddd; padding-bottom: .3rem; margin-top: 2.5rem; }
+    .roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 1rem; }
+    .card h3 { margin: 0 0 .3rem; }
+    .flow { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+    .state { background: #eef; border-radius: 6px; padding: .4rem .8rem; font-family: monospace; }
+    .arrow { color: #888; }
+    code { background: #f4f4f4; padding: .1rem .3rem; border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { text-align: left; border-bottom: 1px solid #eee; padding: .4rem; vertical-align: top; }
+  </style>
 </head>
 <body>
-  <h1>HOLA</h1>
+  <h1>Oficina virtual</h1>
+  <p>Un equipo de agentes IA trabaja junto a un humano en una oficina 3D. Esta página explica quién hace qué, cómo fluye el trabajo y cómo se entrega.</p>
+
+  <h2>Roles</h2>
+  <div class="roles">
+    <div class="card"><h3>Ada · Ingeniera de software</h3><p>Código claro, arquitecturas simples, trade-offs técnicos. Entrega código y documentación técnica.</p></div>
+    <div class="card"><h3>Leo · Diseñador de producto</h3><p>Flujos, interfaces y experiencia de usuario. Entrega diseños en texto y Markdown.</p></div>
+    <div class="card"><h3>Mia · Product manager</h3><p>Prioriza, define criterios de terminado y coordina el tablero. Es la única que edita TEAM.md.</p></div>
+    <div class="card"><h3>Sam · QA y análisis</h3><p>Revisa calidad, prueba entregables y hace análisis de datos.</p></div>
+    <div class="card"><h3>Humano · CEO</h3><p>Dirige al equipo, revisa los entregables y es el único que marca una tarea como <code>done</code> y aprueba fusiones en GitHub.</p></div>
+  </div>
+
+  <h2>Flujo del tablero Kanban</h2>
+  <div class="flow">
+    <span class="state">todo</span><span class="arrow">→</span>
+    <span class="state">doing</span><span class="arrow">→</span>
+    <span class="state">review</span><span class="arrow">→</span>
+    <span class="state">done</span>
+  </div>
+  <ul>
+    <li><strong>todo</strong>: tarea asignada, aún sin empezar.</li>
+    <li><strong>doing</strong>: el responsable ha empezado; se va dejando nota de progreso.</li>
+    <li><strong>review</strong>: el entregable está listo para que el humano lo revise.</li>
+    <li><strong>done</strong>: lo marca solo el humano (salvo que lo pida explícitamente).</li>
+  </ul>
+
+  <h2>Herramientas</h2>
+  <table>
+    <tr><th>Herramienta</th><th>Para qué</th></tr>
+    <tr><td><code>list_tasks</code>, <code>create_task</code>, <code>update_task</code></td><td>Gestionar el tablero Kanban.</td></tr>
+    <tr><td><code>message_teammate</code></td><td>Pedir ayuda o revisión a un compañero por el canal del equipo.</td></tr>
+    <tr><td><code>move_to</code></td><td>Moverse por la oficina (escritorio, sala de reuniones, pizarra, lounge).</td></tr>
+    <tr><td><code>update_memory</code></td><td>Memoria permanente personal (MEMORY.md) y del equipo (TEAM.md, solo Mia).</td></tr>
+    <tr><td><code>write_artifact</code></td><td>Adjuntar un entregable (documento, código, plan) a una tarea.</td></tr>
+    <tr><td>Web (búsqueda y lectura)</td><td>Investigar; las fuentes deben citarse en el entregable.</td></tr>
+    <tr><td>Ejecución de código</td><td>Cálculos, análisis de datos y generación de archivos. Para descargar un archivo, guardarlo en <code>$OUTPUT_DIR</code>.</td></tr>
+    <tr><td>GitHub</td><td>Leer el repo y PRs. Crear issues, abrir PRs o fusionar requiere aprobación del CEO.</td></tr>
+  </table>
+
+  <h2>Cómo se entrega el trabajo</h2>
+  <ol>
+    <li>La tarea se crea en el tablero y se asigna a un agente o al humano.</li>
+    <li>El responsable la pasa a <code>doing</code> y trabaja en ella.</li>
+    <li>El entregable se adjunta con <code>write_artifact</code> sobre la tarea (Markdown).</li>
+    <li>Si hay código, se propone como PR en GitHub; no se publica directamente en <code>main</code>.</li>
+    <li>La tarea pasa a <code>review</code> y el CEO la revisa y la cierra.</li>
+  </ol>
 </body>
 </html>
